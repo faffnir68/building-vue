@@ -29,7 +29,7 @@ export default defineComponent({
   },
   data () {
     return {
-      tasks: [],
+      tasks: [] as any[],
       showAddTask: false
     }
   },
@@ -56,13 +56,13 @@ export default defineComponent({
       ]
   },
   methods: {
-    deleteTask (id) {
-      this.tasks = this.tasks.filter(task => task.id !== id)
+    deleteTask (id: number) {
+      this.tasks = this.tasks.filter((task: any) => task.id !== id)
     },
-    toggleReminder (id) {
-      this.tasks = this.tasks.map(task => task.id === id ? {...task, reminder: !task.reminder} : task)
+    toggleReminder (id: number) {
+      this.tasks = this.tasks.map((task: any) => task.id === id ? {...task, reminder: !task.reminder} : task)
     },
-    addTask (task) {
+    addTask (task: any[]) {
       this.tasks = [...this.tasks, task]
     },
     toggleAddTask () {
