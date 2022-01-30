@@ -1,7 +1,7 @@
 <template>
     <div class="topbar">
         <h1>{{ title }}</h1>
-        <Button />
+        <Button :color="showAddTask ? 'red' : 'green'" :text="showAddTask ? 'Close' : 'Add Task'" @btn-click="$emit('toggle-add-task')" />
     </div>
 </template>
 
@@ -17,6 +17,9 @@ export default {
         title: {
             type: String,
             default: "Hello world"
+        },
+        showAddTask: {
+            type: Boolean
         }
     }
 }
