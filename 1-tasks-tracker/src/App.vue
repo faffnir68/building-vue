@@ -33,27 +33,8 @@ export default defineComponent({
       showAddTask: false
     }
   },
-  created () {
-    this.tasks = [
-        {
-          id: 1,
-          text: 'test 1',
-          date: "Jeudi 3 janvier a 20h30",
-          reminder: true
-        },
-        {
-          id: 2,
-          text: 'test 2',
-          date: "Jeudi 3 janvier a 20h30",
-          reminder: true
-        },
-        {
-          id: 3,
-          text: 'test 3',
-          date: "Jeudi 3 janvier a 20h30",
-          reminder: false
-        },
-      ]
+  async created () {
+    this.tasks = await this.fetchTasks()
   },
   methods: {
     deleteTask (id: number) {
@@ -62,11 +43,34 @@ export default defineComponent({
     toggleReminder (id: number) {
       this.tasks = this.tasks.map((task: any) => task.id === id ? {...task, reminder: !task.reminder} : task)
     },
-    addTask (task: any[]) {
-      this.tasks = [...this.tasks, task]
+    async addTask (task: any[]) {
+      const res = await fetch("/api/tasks", {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(task)
+      })
+      const data = await res.json()
+
+
+      this.tasks = [...this.tasks, data]
     },
     toggleAddTask () {
       this.showAddTask = !this.showAddTask
+    },
+    async fetchTasks() {
+      const res = await fetch("/api/tasks", {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const data = await res.json();
+      return data
+    },
+    async fetchTask(id: number) {
+      const res = await fetch(`/api/tasks/${id}`);
+      const data = await res.json();
+      return data;
     }
   }
 });
