@@ -1,79 +1,37 @@
 <template>
   <div class="main-container">
-      <Header @toggle-add-task="toggleAddTask" title="Task Tracker" :showAddTask="showAddTask" />
-      <div class="add-task-container" v-show="showAddTask">
-        <AddTask @add-task="addTask" />
-      </div>
-    <div class="tasks-container">
-        <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
-    </div>
+      <Header @toggle-add-task="toggleAddTask" title="Task Tracker"  :showAddTask="showAddTask" />
+      <router-view :showAddTask="showAddTask"></router-view>
+      <Footer />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import Tasks from './components/Tasks.vue';
+<script>
+// import { defineComponent } from 'vue';
 import Header from './components/Header.vue';
-import AddTask from './components/AddTask.vue';
+import Footer from './components/Footer.vue';
 // import Task from './components/Task.vue';
 
 
 
-export default defineComponent({
+export default {
   name: 'App',
   components: {
     Header,
-    Tasks,
-    AddTask
-    // Task
+    Footer,
   },
   data () {
     return {
-      tasks: [] as any[],
       showAddTask: false
     }
   },
-  async created () {
-    this.tasks = await this.fetchTasks()
-  },
+
   methods: {
-    deleteTask (id: number) {
-      this.tasks = this.tasks.filter((task: any) => task.id !== id)
-    },
-    toggleReminder (id: number) {
-      this.tasks = this.tasks.map((task: any) => task.id === id ? {...task, reminder: !task.reminder} : task)
-    },
-    async addTask (task: any[]) {
-      const res = await fetch("/api/tasks", {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify(task)
-      })
-      const data = await res.json()
-
-
-      this.tasks = [...this.tasks, data]
-    },
     toggleAddTask () {
       this.showAddTask = !this.showAddTask
     },
-    async fetchTasks() {
-      const res = await fetch("/api/tasks", {
-        method: 'GET',
-        credentials: 'include',
-      });
-      const data = await res.json();
-      return data
-    },
-    async fetchTask(id: number) {
-      const res = await fetch(`/api/tasks/${id}`);
-      const data = await res.json();
-      return data;
-    }
   }
-});
+};
 </script>
 
 <style>
