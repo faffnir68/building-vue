@@ -11,9 +11,17 @@ import Layout from "./Layout.vue";
 export default {
     name: "EventRegister",
     props: ['event'],
+    inject: ['GStore'],
     components: { Layout },
     methods: {
         register () {
+
+            this.GStore.flashMessage = "You are succefully registered for " + this.event.title
+
+            setTimeout(() => {
+                this.GStore.flashMessage = ""
+            }, 3000)
+
             this.$router.push({ name: 'EventDetails', params: { id: this.event.id } })
         }
     }

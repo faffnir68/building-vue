@@ -24,11 +24,15 @@ export default {
       watchEffect(() => {
         EventService.getEvent(this.id)
             .then(response => {
-            this.event = response.data;
-            console.log(this.$route)
-        })
+            this.event = response.data
+          })
             .catch(error => {
-            console.log(error);
+              if(error.response && error.response.status === 404) {
+                this.$router.push({ name: "ResourceNotFound", params: { resource: 'event' } })
+              }
+              else {
+                this.$router.push({ name: "NetworkError" })
+              }
         })
       })
     },

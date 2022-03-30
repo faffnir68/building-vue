@@ -37,10 +37,15 @@ export default {
         this.eventNb = response.headers['x-total-count']
         this.pagesNb = Math.ceil(this.eventNb / this.perPage)
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .catch((error) => {
+        if(error.response && error.response.status == 404) {
+          this.$router.push({ name: "ResourceNotFound", params: { resource: 'event' } })
+        }
+        else {
+          this.$router.push({ name: "NetworkError" })
+        }
     })
+  })
   },
   computed: {
     hasMoreEvents () {
